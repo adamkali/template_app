@@ -71,7 +71,7 @@ jobs:
       uses: cssnr/stack-deploy-action@v1
       with:
         name: 'template_app'
-        file: 'docker-swarm.yaml'
+        file: 'docker-swarm.yml'
         host: kalilarosa.xyz 
         user: deploy
         ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
