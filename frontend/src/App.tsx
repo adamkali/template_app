@@ -132,6 +132,19 @@ const App = () => {
 						</svg>
 					</button>
 				</div>
+				<div class="flex flex-col card bg-base-200 w-2/3 h-2/3 shadow-xl my-auto p-12 space-y-2">
+					<figure>
+						<img src="https://loco.rs/icon.svg" width="260px" alt="LocoRS" />
+					</figure>
+					<div class="card-title items-center text-4xl text-primary text-center pt-4">
+						Welcome to a LocoRS Made App
+					</div>
+					<div class="card-body flex flex-col space-y-4">
+						<div class="flex flex-row space-x-2 items-center justify-between">
+                            You must login to continue.
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	};
