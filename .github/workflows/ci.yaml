@@ -29,7 +29,6 @@ jobs:
 
   build-and-push-image:
     needs:
-      - build-and-test
       - commit-hash
     runs-on: ubuntu-latest
     steps:
