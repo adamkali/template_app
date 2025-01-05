@@ -23,6 +23,7 @@ services:
       - '5170:6379'
     volumes:
       - redis-data:/data
+
   web: 
     restart: always
     image: ghcr.io/adamkali/template_app:${GIT_COMMIT_HASH:-latest}
