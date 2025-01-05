@@ -72,7 +72,7 @@ jobs:
       with:
         name: 'template_app'
         file: 'docker-stack.yaml'
-        host: ${{ secrets.HOST_IP }} 
+        host: kalilarosa.xyz 
         user: deploy
         ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
         env_file: './env'
