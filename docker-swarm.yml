@@ -24,7 +24,7 @@ services:
 
   web: 
     restart: always
-    image: ghcr.io/adamkali/template_app-web:${GIT_COMMIT_HASH:-latest}
+    image: ghcr.io/adamkali/template_app:${GIT_COMMIT_HASH:-latest}
     container_name: template_app_web
     ports:
       - '15150:5150'
