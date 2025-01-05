@@ -10,8 +10,6 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=template_app_database
       - POSTGRES_CONNECTION_TIMEOUT=600
-    secrets:
-      - pg-password
     volumes:
       - pg-data:/var/lib/postgresql/data
 
@@ -30,11 +28,6 @@ services:
     container_name: template_app_web
     ports:
       - '15150:5150'
-    secrets:
-      - pg-password
-      - jwt-password 
-      - mail-password
-
     environment: 
       - JWT_PASSWORD=${JWT_PASSWORD}
       - MAILER_PASSWORD=${MAILER_PASSWORD}
