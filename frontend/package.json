@@ -1,0 +1,33 @@
+{
+  "name": "rsbuild-solid-ts",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "rsbuild dev --open",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview",
+    "lint": "biome check ./src/ --apply",
+    "format": "biome format ./src/ --write",
+    "tw": "tailwindcss -i ./tailwind.css -o ./src/index.css --watch --minify"
+  },
+  "dependencies": {
+    "@kobalte/core": "^0.13.7",
+    "@solidjs/router": "^0.15.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "solid-js": "^1.9.3",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.1.8",
+    "@rsbuild/plugin-babel": "^1.0.3",
+    "@rsbuild/plugin-solid": "^1.0.4",
+    "autoprefixer": "^10.4.20",
+    "daisyui": "^4.12.23",
+    "postcss": "^8.4.49",
+    "rsbuild-plugin-tailwindcss": "^0.0.3",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2"
+  }
+}

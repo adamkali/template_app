@@ -1,0 +1,55 @@
+logger:
+  enable: true
+  pretty_backtrace: true
+  level: info
+  format: compact
+
+server:
+  port: 5150
+  host: https://localhost
+  middlewares:
+    static:
+      enable: true
+      must_exist: true
+      precompressed: false
+      folder:
+        uri: "/"
+        path: "frontend/dist"
+      fallback: "frontend/dist/index.html"
+
+workers:
+  mode: BackgroundAsync
+
+mailer:
+  smtp:
+    enable: true
+    host: smtp-mail.outlook.com
+    port: 587
+    secure: true
+    auth: 
+      user: adamkali@outlook.com 
+      password: {{ get_env(name="MAILER_PASSWORD", default="admin") }}
+
+database:
+  # Database connection URI
+  uri: 'postgres://template_app_pg/template_app_database?user=template_app_user&password={{ get_env(name="POSTGRES_PASSWORD", default="password") }}'
+  enable_logging: true
+  connect_timeout: 2000 
+  idle_timeout: 500
+  min_connections: 1
+  max_connections: 3
+  auto_migrate: true
+  dangerously_truncate: false
+  dangerously_recreate: false
+
+# Queue Configuration
+queue:
+  kind: Redis
+  uri: {{ get_env(name="REDIS_URL", default="redis://127.0.0.1") }}
+  dangerously_flush: false
+
+# Authentication Configuration
+auth:
+  jwt:
+    secret: {{ get_env(name="JWT_PASSWORD") }} 
+    expiration: 604800 # 7 days

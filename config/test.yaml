@@ -1,0 +1,60 @@
+logger:
+  enable: false
+  level: debug
+  format: compact
+
+server:
+  port: 5150
+  host: http://localhost
+  middlewares:
+    static:
+      enable: true
+      precompressed: false
+      must_exist: false
+      folder:
+        uri: "/"
+        path: "frontend/dist"
+      fallback: "frontend/dist/index.html"
+
+# Worker Configuration
+workers:
+  mode: BackgroundAsync
+
+mailer:
+  smtp:
+    enable: true
+    host: {{ get_env(name="MAILER_HOST", default="localhost") }}
+    port: 587
+    secure: true
+    auth: 
+      user: {{ get_env(name="MAILER_USERNAME", default="admin") }}
+      password: {{ get_env(name="MAILER_PASSWORD", default="admin") }}
+
+# Initializers Configuration
+# initializers:
+#  oauth2:
+#    authorization_code: # Authorization code grant type
+#      - client_identifier: google # Identifier for the OAuth2 provider. Replace 'google' with your provider's name if different, must be unique within the oauth2 config.
+#        ... other fields
+
+database:
+  uri: 'postgres://{{ get_env(name="POSTGRES_HOST") }}/template_app_database?user=template_app_user&password={{ get_env(name="POSTGRES_PASSWORD", default="password") }}'
+  enable_logging: true
+  connect_timeout: {{ get_env(name="DB_CONNECT_TIMEOUT", default="1000") }}
+  idle_timeout: 500
+  min_connections: 1
+  max_connections: 3
+  auto_migrate: true
+  dangerously_truncate: false
+  dangerously_recreate: false
+
+queue:
+  kind: Redis
+  uri: {{get_env(name="REDIS_URL", default="redis://127.0.0.1")}}
+  dangerously_flush: false
+
+auth:
+  jwt:
+    secret: 8dVETTLFTjE2EUkzGtUL
+    expiration: 604800 # 7 days
+
