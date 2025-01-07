@@ -44,23 +44,23 @@ import {
 } from '../models/index';
 
 export interface ForgotRequest {
-    forgotParams: ForgotParams;
+    body: ForgotParams;
 }
 
 export interface LoginRequest {
-    loginParams: LoginParams;
+    body: LoginParams;
 }
 
 export interface RegisterRequest {
-    registerParams: RegisterParams;
+    body: RegisterParams;
 }
 
 export interface ResetRequest {
-    resetParams: ResetParams;
+    body: ResetParams;
 }
 
 export interface VerifyRequest {
-    verifyParams: VerifyParams;
+    body: VerifyParams;
 }
 
 /**
@@ -75,6 +75,14 @@ export class AuthApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("api_jwt_token", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
         const response = await this.request({
             path: `/auth/current`,
             method: 'GET',
@@ -96,10 +104,10 @@ export class AuthApi extends runtime.BaseAPI {
      * In case the user forgot his password  this endpoints generate a forgot token and send email to the user. In case the email not found in our DB, we are returning a valid request for for security reasons (not exposing users DB list).
      */
     async forgotRaw(requestParameters: ForgotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['forgotParams'] == null) {
+        if (requestParameters['body'] == null) {
             throw new runtime.RequiredError(
-                'forgotParams',
-                'Required parameter "forgotParams" was null or undefined when calling forgot().'
+                'body',
+                'Required parameter "body" was null or undefined when calling forgot().'
             );
         }
 
@@ -114,7 +122,7 @@ export class AuthApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ForgotParamsToJSON(requestParameters['forgotParams']),
+            body: requestParameters['body'] as any,
         }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -131,10 +139,10 @@ export class AuthApi extends runtime.BaseAPI {
      * Creates a user login and returns a token
      */
     async loginRaw(requestParameters: LoginRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DetailedResponseLoginResponse>> {
-        if (requestParameters['loginParams'] == null) {
+        if (requestParameters['body'] == null) {
             throw new runtime.RequiredError(
-                'loginParams',
-                'Required parameter "loginParams" was null or undefined when calling login().'
+                'body',
+                'Required parameter "body" was null or undefined when calling login().'
             );
         }
 
@@ -149,7 +157,7 @@ export class AuthApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: LoginParamsToJSON(requestParameters['loginParams']),
+            body: requestParameters['body'] as any,
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DetailedResponseLoginResponseFromJSON(jsonValue));
@@ -167,10 +175,10 @@ export class AuthApi extends runtime.BaseAPI {
      * Register function creates a new user with the given parameters and sends a welcome email to the user
      */
     async registerRaw(requestParameters: RegisterRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DetailedResponseString>> {
-        if (requestParameters['registerParams'] == null) {
+        if (requestParameters['body'] == null) {
             throw new runtime.RequiredError(
-                'registerParams',
-                'Required parameter "registerParams" was null or undefined when calling register().'
+                'body',
+                'Required parameter "body" was null or undefined when calling register().'
             );
         }
 
@@ -185,7 +193,7 @@ export class AuthApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RegisterParamsToJSON(requestParameters['registerParams']),
+            body: requestParameters['body'] as any,
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => DetailedResponseStringFromJSON(jsonValue));
@@ -203,10 +211,10 @@ export class AuthApi extends runtime.BaseAPI {
      * reset user password by the given parameters
      */
     async resetRaw(requestParameters: ResetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['resetParams'] == null) {
+        if (requestParameters['body'] == null) {
             throw new runtime.RequiredError(
-                'resetParams',
-                'Required parameter "resetParams" was null or undefined when calling reset().'
+                'body',
+                'Required parameter "body" was null or undefined when calling reset().'
             );
         }
 
@@ -221,7 +229,7 @@ export class AuthApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ResetParamsToJSON(requestParameters['resetParams']),
+            body: requestParameters['body'] as any,
         }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
@@ -238,10 +246,10 @@ export class AuthApi extends runtime.BaseAPI {
      * Verify register user. if the user not verified his email, he can\'t login to the system.
      */
     async verifyRaw(requestParameters: VerifyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['verifyParams'] == null) {
+        if (requestParameters['body'] == null) {
             throw new runtime.RequiredError(
-                'verifyParams',
-                'Required parameter "verifyParams" was null or undefined when calling verify().'
+                'body',
+                'Required parameter "body" was null or undefined when calling verify().'
             );
         }
 
@@ -256,7 +264,7 @@ export class AuthApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: VerifyParamsToJSON(requestParameters['verifyParams']),
+            body: requestParameters['body'] as any,
         }, initOverrides);
 
         return new runtime.VoidApiResponse(response);

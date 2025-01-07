@@ -215,6 +215,9 @@ pub async fn login(
     responses(
         (status=200, description = "An email was sent", body=DetailedResponse<CurrentResponse>),
         (status=401, description = "An email was sent", body=DetailedResponse<CurrentResponse>)
+    ),
+    security(
+        ("api_jwt_token" = [])
     )
 )]
 #[debug_handler]

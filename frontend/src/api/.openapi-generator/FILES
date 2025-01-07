@@ -1,17 +1,4 @@
 apis/AuthApi.ts
 apis/index.ts
 index.ts
-models/CurrentResponse.ts
-models/DetailedResponseCurrentResponse.ts
-models/DetailedResponseCurrentResponseData.ts
-models/DetailedResponseLoginResponse.ts
-models/DetailedResponseLoginResponseData.ts
-models/DetailedResponseString.ts
-models/ForgotParams.ts
-models/LoginParams.ts
-models/LoginResponse.ts
-models/RegisterParams.ts
-models/ResetParams.ts
-models/VerifyParams.ts
-models/index.ts
 runtime.ts
