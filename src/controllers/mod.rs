@@ -8,11 +8,12 @@ use utoipa::{
 
 use crate::views::{
     auth::{CurrentResponse, LoginResponse},
-    DetailedResponse
+    DetailedResponse,
 };
 
 #[derive(OpenApi)]
 #[openapi(
+    modifiers(&SecurityAddon),
     info(
         title = "OpenAPI doc for template_app",
         license(name = "apache 2.0")
