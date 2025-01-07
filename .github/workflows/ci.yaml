@@ -67,12 +67,13 @@ jobs:
     - name: create env file
       run: |
         echo "GIT_COMMIT_HASH=${{ github.sha }}" >> env
-
-    - uses: arwynfr/actions-docker-context@v2
+    - name: 'Docker Stack Deploy'
+      uses: cssnr/stack-deploy-action@v1
       with:
-        docker_host: 'ssh://kalilarosa@kalilarosa.xyz'
-        context_name: 'dev-server'
-        ssh_cert: ${{ secrets.DEPLOY_SSH_CERT }}
+        name: 'template_app'
+        file: 'docker-swarm.yml'
+        host: kalilarosa.xyz 
+        user: deploy
         ssh_key: ${{ secrets.DEPLOY_SSH_KEY }}
+        env_file: './env'
 
-    - run: docker --context dev-server stack deploy --compose-file docker-compose.yml template_app
