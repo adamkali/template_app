@@ -93,6 +93,9 @@ const App = () => {
 								Verified
 							</span>
 						</div>
+						<div class="flex flex-row space-x-2 justify-center">
+                            <button class="btn btn-primary"></button>
+						</div>
 					</div>
 				</div>
 				<footer class="flex flex-row justify-end">

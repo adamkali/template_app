@@ -50,5 +50,5 @@ volumes:
   pg-data:
 
 networks:
-  template_app:
-    driver: overlay
+  template_app_network:
+    external: true

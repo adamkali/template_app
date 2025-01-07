@@ -5,6 +5,8 @@ services:
     restart: always
     image: postgres
     container_name: template_app_pg
+    ports:
+      - '5130:5432'
     environment:
       - POSTGRES_USER=template_app_user
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -26,7 +28,6 @@ services:
 
 volumes:
   redis-data:
-  pgadmin-data:
   pg-data:
 
 
