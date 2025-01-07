@@ -32,7 +32,7 @@ mailer:
 
 database:
   # Database connection URI
-  uri: 'postgres://template_app_pg/template_app_database?user=template_app_user&password={{ get_env(name="POSTGRES_PASSWORD", default="password") }}'
+  uri: 'postgres://localhost:5432/template_app_database?user=template_app_user&password={{ get_env(name="POSTGRES_PASSWORD", default="password") }}'
   enable_logging: true
   connect_timeout: 2000 
   idle_timeout: 500
