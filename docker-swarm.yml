@@ -51,4 +51,4 @@ volumes:
 
 networks:
   template_app:
-    driver: bridge
+    driver: overlay

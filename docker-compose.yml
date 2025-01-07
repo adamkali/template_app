@@ -24,20 +24,6 @@ services:
     volumes:
       - redis-data:/data
 
-  web: 
-    restart: always
-    image: ghcr.io/adamkali/template_app:${GIT_COMMIT_HASH:-latest}
-    container_name: template_app_web
-    ports:
-      - '8000:5150'
-    environment: 
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - JWT_PASSWORD=${JWT_PASSWORD}
-      - MAILER_PASSWORD=${MAILER_PASSWORD}
-      - REDIS_URL="http://127.0.0.1:6379"
-    depends_on:
-      - db
-
 volumes:
   redis-data:
   pgadmin-data:
