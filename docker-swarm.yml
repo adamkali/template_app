@@ -13,7 +13,7 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
     networks:
-        - template_app_network
+        - template_app_ingress
 
   redis:
     image: 'bitnami/redis:latest'
@@ -24,7 +24,7 @@ services:
     volumes:
       - redis-data:/data
     networks:
-        - template_app_network
+        - template_app_ingress
 
   web: 
     restart: always
@@ -43,7 +43,7 @@ services:
     depends_on:
       - db
     networks:
-        - template_app_network
+        - template_app_ingress
     
 volumes:
   redis-data:
@@ -51,5 +51,4 @@ volumes:
   pg-data:
 
 networks:
-  template_app_network:
-    external: true
+  template_app_ingress:
