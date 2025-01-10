@@ -48,8 +48,8 @@ services:
     ports:
       - mode: host
         protocol: tcp 
-        published: 11111
-        target: 5150
+        published: 11112
+        target: 5678
     command: ["-text", "Hello from Docker Compose!"]
 
       
