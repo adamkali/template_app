@@ -5,7 +5,7 @@ logger:
 
 server:
   port: 5150
-  host: http://localhost
+  host: 127.0.0.1
   middlewares:
     static:
       enable: true
