@@ -29,7 +29,7 @@ services:
     ports:
       - mode: host
         protocol: tcp
-        published: 5150
+        published: 11111
         target: 5150
     environment: 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -41,7 +41,18 @@ services:
         order: start-first
     depends_on:
       - db
-    
+
+  echo:
+    restart: always
+    image: hashicorp/http-echo
+    ports:
+      - mode: host
+        protocol: tcp 
+        published: 11111
+        target: 5150
+    command: ["-text", "Hello from Docker Compose!"]
+
+      
 volumes:
   redis-data:
   pgadmin-data:
