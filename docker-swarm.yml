@@ -12,8 +12,6 @@ services:
       - POSTGRES_CONNECTION_TIMEOUT=600
     volumes:
       - pg-data:/var/lib/postgresql/data
-    networks:
-        - template_app_ingress
 
   redis:
     image: 'bitnami/redis:latest'
@@ -23,8 +21,6 @@ services:
       - ALLOW_EMPTY_PASSWORD=true
     volumes:
       - redis-data:/data
-    networks:
-        - template_app_ingress
 
   web: 
     restart: always
