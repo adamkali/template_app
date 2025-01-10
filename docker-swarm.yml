@@ -45,13 +45,9 @@ services:
         order: start-first
     depends_on:
       - db
-    networks:
-        - template_app_ingress
     
 volumes:
   redis-data:
   pgadmin-data:
   pg-data:
 
-networks:
-  template_app_ingress:
