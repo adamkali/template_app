@@ -5,7 +5,7 @@ logger:
 
 server:
   port: 5150
-  host: 127.0.0.1
+  host: "http://127.0.0.1"
   middlewares:
     static:
       enable: true
@@ -31,7 +31,7 @@ mailer:
 
 database:
   # Database connection URI
-  uri: 'postgres://template_app_db/template_app_database?user=template_app_user&password={{ get_env(name="POSTGRES_PASSWORD", default="password") }}'
+  uri: 'postgres://127.0.0.1:5130/template_app_database?user=template_app_user&password=mFxphB2Do9QmTVWflafX9XOrmsdELXyR'
   enable_logging: true
   connect_timeout: 2000 
   idle_timeout: 500
@@ -44,11 +44,11 @@ database:
 # Queue Configuration
 queue:
   kind: Redis
-  uri: {{ get_env(name="REDIS_URL", default="redis://127.0.0.1") }}
+  uri: "http://localhost:5170"
   dangerously_flush: false
 
 # Authentication Configuration
 auth:
   jwt:
-    secret: {{ get_env(name="JWT_PASSWORD") }} 
+    secret: 9R1HY73SUNryXH9KAGVA 
     expiration: 604800 # 7 days

@@ -38,8 +38,3 @@ volumes:
   redis-data:
   pgadmin-data:
   pg-data:
-
-networks:
-  template_app_network: 
-    external: true 
-    name: host

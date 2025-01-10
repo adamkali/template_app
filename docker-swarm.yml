@@ -23,7 +23,6 @@ services:
       - redis-data:/data
 
   web: 
-    restart: always
     image: ghcr.io/adamkali/template_app:${GIT_COMMIT_HASH:-latest}
     container_name: template_app_web
     ports:

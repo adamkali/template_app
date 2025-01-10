@@ -14,6 +14,8 @@ services:
       - POSTGRES_CONNECTION_TIMEOUT=1200
     volumes:
       - pg-data:/var/lib/postgresql/data
+    networks:
+        - template_app
 
   redis:
     image: 'bitnami/redis:latest'
@@ -25,9 +27,30 @@ services:
       - '5170:6379'
     volumes:
       - redis-data:/data
+    networks:
+        - template_app
+
+  web: 
+    restart: always
+    build: .
+    container_name: template_app_web
+    ports:
+      - '5150:5150'
+    environment: 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_PASSWORD=${JWT_PASSWORD}
+      - MAILER_PASSWORD=${MAILER_PASSWORD}
+      - REDIS_URL=${REDIS_URL}
+    networks:
+        - template_app
 
 volumes:
   redis-data:
   pg-data:
+
+
+networks:
+  template_app:
+    driver: bridge
 
 
