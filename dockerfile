@@ -18,4 +18,4 @@ COPY --from=builder /usr/src/target/release/template_app-cli /usr/app/template_a
 
 EXPOSE 5150
 
-CMD ["/usr/app/template_app-cli", "start", "-e", "production"]
+CMD ["/usr/app/template_app-cli", "start", "-e", "local"]
