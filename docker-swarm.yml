@@ -12,6 +12,8 @@ services:
       - POSTGRES_CONNECTION_TIMEOUT=600
     volumes:
       - pg-data:/var/lib/postgresql/data
+    networks:
+      - uat-network
 
   redis:
     image: 'bitnami/redis:latest'
@@ -21,6 +23,8 @@ services:
       - ALLOW_EMPTY_PASSWORD=true
     volumes:
       - redis-data:/data
+    networks:
+      - uat-network
 
   web: 
     image: ghcr.io/adamkali/template_app:${GIT_COMMIT_HASH:-latest}
@@ -28,7 +32,7 @@ services:
     ports:
       - mode: host
         protocol: tcp
-        published: 11111
+        published: 5150
         target: 5150
     environment: 
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -40,6 +44,8 @@ services:
         order: start-first
     depends_on:
       - db
+    networks:
+      - uat-network
 
   echo:
     restart: always
@@ -50,6 +56,8 @@ services:
         published: 11112
         target: 5678
     command: ["-text", "Hello from Docker Compose!"]
+    networks:
+      - uat-network
 
       
 volumes:
@@ -57,3 +65,7 @@ volumes:
   pgadmin-data:
   pg-data:
 
+
+networks:
+  uat-network
+    external: true 
