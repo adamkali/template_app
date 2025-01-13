@@ -19,5 +19,5 @@ COPY --from=builder /usr/src/target/release/template_app-cli /usr/app/template_a
 EXPOSE 5150
 RUN apt-get update && apt-get install -y curl
 
-CMD ["/usr/app/template_app-cli", "start", "-e", "local"]
+CMD ["/usr/app/template_app-cli", "start", "-e", "production"]
 # CMD ["curl" "-X", "GET", "http://localhost:5150"]
