@@ -5,36 +5,35 @@ services:
     restart: always
     image: postgres
     container_name: template_app_pg
+    ports:
+      - '5432:5432'
     environment:
       - POSTGRES_USER=template_app_user
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=SZUTwbnwDTJcd0Btw3DDS8u1tY8WNC0J
       - POSTGRES_DB=template_app_database
-      - POSTGRES_CONNECTION_TIMEOUT=600
+      - POSTGRES_CONNECTION_TIMEOUT=1200
     volumes:
       - pg-data:/var/lib/postgresql/data
+    networks:
+        - host
 
   redis:
     image: 'bitnami/redis:latest'
     restart: always
     container_name: template_app_cache
     environment:
-      - ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}
+      - ALLOW_EMPTY_PASSWORD=true
+    ports:
+      - '5170:6379'
     volumes:
       - redis-data:/data
+    networks:
+        - host
 
-  web: 
-    restart: always
-    build: .
-    container_name: template_app_web
-    ports:
-      - '8000:5150'
-    environment: 
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - JWT_PASSWORD=${JWT_PASSWORD}
-      - MAILER_PASSWORD=${MAILER_PASSWORD}
-      - REDIS_URL=${REDIS_URL}
-    
+
 volumes:
   redis-data:
-  pgadmin-data:
   pg-data:
+
+networks:
+  host:
