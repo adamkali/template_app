@@ -5,7 +5,7 @@ logger:
 
 server:
   port: 5150
-  host: http://localhost
+  host: http://0.0.0.0
   middlewares:
     static:
       enable: true
@@ -21,7 +21,7 @@ workers:
 
 mailer:
   smtp:
-    enable: true
+    enable: false
     host: smtp-mail.outlook.com
     port: 587
     secure: true
@@ -31,7 +31,7 @@ mailer:
 
 database:
   # Database connection URI
-  uri: 'postgres://template_app_db/template_app_database?user=template_app_user&password=mFxphB2Do9QmTVWflafX9XOrmsdELXyR'
+  uri: {{ get_env(name="POSTGRES_URI") }}
   enable_logging: true
   connect_timeout: 2000 
   idle_timeout: 500
@@ -44,11 +44,11 @@ database:
 # Queue Configuration
 queue:
   kind: Redis
-  uri: "http://localhost:5170"
+  uri: {{ get_env(name="REDIS_URI") }}
   dangerously_flush: false
 
 # Authentication Configuration
 auth:
   jwt:
-    secret: 9R1HY73SUNryXH9KAGVA 
+    secret: {{ get_env(name="JWT_SECRET") }}
     expiration: 604800 # 7 days

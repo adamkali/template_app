@@ -1,14 +1,15 @@
-POSTGRES_PASSWORD=SZUTwbnwDTJcd0Btw3DDS8u1tY8WNC0J
-JWT_PASSWORD=9R1HY73SUNryXH9KAGVA 
-MAILER_PASSWORD=""
+CONTAINER_NAME=template_app
+USER_NAME=adamkali
 
-up: 
-	docker compose -p template_app up -d
-up-local: 
-	docker compose -p template_app -f  docker-compose.test.yml up -d
-down-local: 
-	docker compose -p template_app -f docker-compose.test.yml down
-down:
-	docker compose -p template_app down
-remove:
-	docker rmi template_app-web
+docker-build-tag:
+	docker build -t $(CONTAINER_NAME):latest  -f dockerfile .
+	docker build -t $(CONTAINER_NAME):$(shell git rev-parse HEAD) -f dockerfile .
+
+push-to-ghcr:
+	docker tag $(CONTAINER_NAME):$(shell git rev-parse HEAD) ghcr.io/$(USER_NAME)/$(CONTAINER_NAME):$(shell git rev-parse  HEAD)
+	docker tag $(CONTAINER_NAME):latest ghcr.io/$(USER_NAME)/$(CONTAINER_NAME):latest
+	docker push ghcr.io/$(USER_NAME)/$(CONTAINER_NAME):latest
+	docker push ghcr.io/$(USER_NAME)/$(CONTAINER_NAME):$(shell git rev-parse HEAD)
+	
+prod: docker-build-tag push-to-ghcr
+

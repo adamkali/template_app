@@ -1,0 +1,53 @@
+services:
+  redis:
+    image: redis:alpine
+    restart: always
+    container_name: template_app_redis
+    ports:
+      - '5170:6379'
+    environment: 
+      ALLOW_EMPTY_PASSWORD: true
+    volumes:
+      - redis-data:/data
+    networks:
+      - app_net
+
+  db:
+    image: postgres
+    restart: always
+    container_name: template_app_db
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: template_app_user
+      POSTGRES_PASSWORD: 
+      POSTGRES_DB: template_app_database
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - app_net
+
+  web:
+    build:
+      context: .
+      dockerfile: local.dockerfile 
+    container_name: template_app_web
+    restart: always
+    ports:
+      - '5150:5150'
+    environment: 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - JWT_PASSWORD=${JWT_PASSWORD}
+      - MAILER_PASSWORD=${MAILER_PASSWORD}
+      - REDIS_URL="http://template_app_cache:6379"
+    networks:
+        - app_net
+
+networks:
+  app_net:
+    driver: bridge
+
+volumes:
+  redis-data:
+  pg-data:
+
