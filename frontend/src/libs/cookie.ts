@@ -1,4 +1,4 @@
-import { LoginResponse } from "@/api";
+import {  LoginResponse } from "../responses";
 
 const LOCALSTORAGE_USERKEY = "user_login_response";
 

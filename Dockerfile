@@ -1,9 +1,7 @@
-FROM rust:1.81-slim as builder
+FROM rust:1.81-slim AS builder
 
 WORKDIR /usr/src/
-
 COPY . .
-
 RUN cargo build --release
 
 FROM debian:bookworm

@@ -35,7 +35,7 @@ pub struct ResetParams {
 /// welcome email to the user
 #[utoipa::path(
     post,
-    path="/auth/register",
+    path="/api/auth/register",
     responses(
         (status=200, description = "Registered successfully", body=DetailedResponse<String>)
     ),
@@ -75,7 +75,7 @@ async fn register(
 /// the system.
 #[utoipa::path(
     post,
-    path="/auth/verify",
+    path="/api/auth/verify",
     responses(
         (status=200, description = "Verified successfully")
     ),
@@ -108,7 +108,7 @@ pub async fn verify(
 /// list).
 #[utoipa::path(
     post,
-    path="/auth/forgot",
+    path="/api/auth/forgot",
     responses(
         (status=200, description = "An email was sent")
     ),
@@ -141,7 +141,7 @@ pub async fn forgot(
 /// reset user password by the given parameters
 #[utoipa::path(
     post,
-    path="/auth/reset",
+    path="/api/auth/reset",
     responses(
         (status=200, description = "An email was sent")
     ),
@@ -172,7 +172,7 @@ pub async fn reset(
 /// Creates a user login and returns a token
 #[utoipa::path(
     post,
-    path="/auth/login",
+    path="/api/auth/login",
     responses(
         (status=200, description = "An email was sent", body=DetailedResponse<LoginResponse>),
         (status=401, description = "An email was sent", body=DetailedResponse<LoginResponse>)
@@ -211,7 +211,7 @@ pub async fn login(
 
 #[utoipa::path(
     get,
-    path="/auth/current",
+    path="/api/auth/current",
     responses(
         (status=200, description = "An email was sent", body=DetailedResponse<CurrentResponse>),
         (status=401, description = "An email was sent", body=DetailedResponse<CurrentResponse>)

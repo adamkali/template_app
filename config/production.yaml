@@ -1,11 +1,12 @@
 logger:
   enable: true
-  level: trace
+  level: trace 
   format: compact
 
 server:
+  binding: 0.0.0.0
   port: 5150
-  host: http://0.0.0.0
+  host: http://localhost
   middlewares:
     static:
       enable: true
@@ -31,10 +32,9 @@ mailer:
 
 database:
   # Database connection URI
-  # postgres://postgres:yU3UUUEUL7wTnO19EAUhi6iQ7J1xIQR8G46ieMKQRaZVxEh25bCO4jedMWyowTmM@/postgres
   uri: 'postgres://fo0k0gg0c04sg4s0gows8kks:5432/postgres?user=postgres&password=yU3UUUEUL7wTnO19EAUhi6iQ7J1xIQR8G46ieMKQRaZVxEh25bCO4jedMWyowTmM'
   enable_logging: true
-  connect_timeout: 2000 
+  connect_timeout: 500
   idle_timeout: 500
   min_connections: 1
   max_connections: 3

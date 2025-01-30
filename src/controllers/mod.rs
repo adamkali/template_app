@@ -16,10 +16,8 @@ use crate::views::{
     modifiers(&SecurityAddon),
     info(
         title = "OpenAPI doc for template_app",
-        license(name = "apache 2.0")
-    ),
-    servers(
-        (url= "http://localhost:5150/api")
+        license(name = "apache 2.0"),
+        version = "0.1.0"
     ),
     paths(
         // auth controller

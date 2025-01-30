@@ -3,6 +3,9 @@ import useCookies from "@/libs/cookie";
 import { createEffect, createMemo, createSignal, Show } from "solid-js";
 import { copyToClipboard } from "./libs/clipboard";
 
+
+// create a framework for myself.
+
 const App = () => {
 	const { getUser, removeUser } = useCookies();
 	const [getCopied, setCopied] = createSignal<boolean>(false);
@@ -93,9 +96,6 @@ const App = () => {
 								Verified
 							</span>
 						</div>
-						<div class="flex flex-row space-x-2 justify-center">
-                            <button class="btn btn-primary"></button>
-						</div>
 					</div>
 				</div>
 				<footer class="flex flex-row justify-end">
@@ -140,7 +140,7 @@ const App = () => {
 						<img src="https://loco.rs/icon.svg" width="260px" alt="LocoRS" />
 					</figure>
 					<div class="card-title items-center text-4xl text-primary text-center pt-4">
-						Welcome to a LocoRS Made App
+						Welcome to a LocoRS Made App for You!
 					</div>
 					<div class="card-body flex flex-col space-y-4">
 						<div class="flex flex-row space-x-2 items-center justify-between">
