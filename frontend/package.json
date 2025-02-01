@@ -3,9 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "rsbuild dev --open",
-    "build": "rsbuild build",
-    "preview": "rsbuild preview",
+    "dev": "rsbuild dev --open --env-dir ../",
+    "build": "rsbuild build --env-dir ../",
+    "preview": "rsbuild preview --env-dir ../",
     "lint": "biome check ./src/ --apply",
     "format": "biome format ./src/ --write",
     "tw": "tailwindcss -i ./tailwind.css -o ./src/index.css --watch --minify"

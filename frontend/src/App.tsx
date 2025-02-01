@@ -4,11 +4,10 @@ import { createEffect, createMemo, createSignal, Show } from "solid-js";
 import { copyToClipboard } from "./libs/clipboard";
 
 
-// create a framework for myself.
-
 const App = () => {
 	const { getUser, removeUser } = useCookies();
 	const [getCopied, setCopied] = createSignal<boolean>(false);
+	const [getfirst, setfirst] = createSignal<second>(third);fourth
 
 	const tokenDisplay = createMemo(() => {
 		const truncatedInput = getUser()?.token?.slice(0, 10);
