@@ -52,12 +52,13 @@ impl Task for GenSwagger {
         let mut fut = match Command::new("openapi-generator-cli")
             .arg("generate")
             .arg("-g")
-            .arg("typescript-fetch")
+            .arg("typescript-axios")
             .arg("-o")
             .arg(output_dir)
             .arg("-i")
             .arg("open_api.json")
             .arg("--skip-validate-spec")
+            .arg("--additional-properties=supportsES6=true,useSingleRequestParameter=true")
             .spawn() {
                 Ok(future_res) => future_res,
                 Err(err) => {

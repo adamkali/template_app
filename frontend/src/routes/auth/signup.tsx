@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { AuthApi, RegisterRequest } from "@/api";
+import { createSignUp } from "@/libs/controllers";
 
 const SignUpPage = () => {
 	const [getUsername, setUsername] = createSignal<string>();
@@ -10,15 +10,17 @@ const SignUpPage = () => {
 
 	const handleCLick = async () => {
 		try {
-			const registerParams = { body: {
-                name: getUsername(),
-				email: getEmail(),
-				password: getPassword(),
-			}} as RegisterRequest;
-            console.log({...registerParams});
-			const auth = new AuthApi();
-			await auth.register(registerParams);
-			window.location.href = "/auth/login";
+			const registerParams = {
+                name: getUsername() ?? "",
+				email: getEmail() ?? "",
+				password: getPassword() ?? "",
+			};
+			const response = await createSignUp({registerParams: registerParams});
+            if (response.successful) {
+                window.location.href = "/auth/login";
+            } else {
+                console.error(response.message)
+            }
 		} catch (error) {
 			throw new Error(error as string);
 		}

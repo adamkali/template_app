@@ -92,6 +92,8 @@ impl super::_entities::users::Model {
         user.ok_or_else(|| ModelError::EntityNotFound)
     }
 
+    
+
     /// finds a user by the provided verification token
     ///
     /// # Errors

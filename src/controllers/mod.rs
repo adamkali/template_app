@@ -13,10 +13,9 @@ use crate::views::{
 
 #[derive(OpenApi)]
 #[openapi(
-    modifiers(&SecurityAddon),
     info(
         title = "OpenAPI doc for template_app",
-        license(name = "apache 2.0"),
+        license(name = "apache 2.0", identifier = "apache-2.0"),
         version = "0.1.0"
     ),
     paths(

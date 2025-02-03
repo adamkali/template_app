@@ -1,27 +1,30 @@
 import { createSignal } from "solid-js";
-import { AuthApi, LoginParams, LoginResponse } from "@/api";
+import {
+	DetailedResponseLoginResponseData as LoginResponse,
+} from "@/api";
 import useCookies from "@/libs/cookie";
+import { createLogin } from "@/libs/controllers";
 
 const LoginPage = () => {
 	const [getUsername, setUsername] = createSignal<string>();
 	const [getPassword, setPassword] = createSignal<string>();
-    const {createUser} = useCookies();
-   
-    const handleCLick = async () => {
-        const loginParams = {
-            email: getUsername() ?? "",
-            password: getPassword() ?? "",
-        } as LoginParams
-        const auth = new AuthApi()
-        const response = await auth.login({ loginParams })
-        if (response.data && response.successful) {
-            const data = response.data as LoginResponse;
-            createUser(data);
-            if (response.nextLink) {
-                window.location.href = response.nextLink
-            }
-        } else throw new Error(response.message ?? "OOPS")
-    }
+	const { createUser } = useCookies();
+
+	const handleCLick = async () => {
+		const loginParams = {
+			email: getUsername() ?? "",
+			password: getPassword() ?? "",
+		};
+
+		const response = (await createLogin({ loginParams: loginParams }));
+		if (response.data && response.successful) {
+			const data = response.data as LoginResponse;
+			createUser(data);
+			if (response.next_link) {
+				window.location.href = response.next_link;
+			}
+		} else throw new Error(response.message ?? "OOPS");
+	};
 
 	return (
 		<div class="flex flex-1 justify-center align-middle w-full min-h-svh">
@@ -37,8 +40,8 @@ const LoginPage = () => {
 							type="text"
 							placeholder="Type here"
 							class="input input-bordered w-full max-w-xs"
-                            value={getUsername()}
-                            onChange={(e) => setUsername(e.currentTarget.value)}
+							value={getUsername()}
+							onChange={(e) => setUsername(e.currentTarget.value)}
 						/>
 					</div>
 					<div class="flex flex-row justify-evenly items-center space-x-8 w-full">
@@ -49,15 +52,17 @@ const LoginPage = () => {
 							id="passward"
 							type="password"
 							class="input input-bordered w-full max-w-xs"
-                            value={getPassword()}
-                            onChange={(e) => setPassword(e.currentTarget.value)}
+							value={getPassword()}
+							onChange={(e) => setPassword(e.currentTarget.value)}
 						/>
 					</div>
 					<div class="flex flex-row justify-end items-center w-full"></div>
 				</div>
 				<div class="card-actions flex flex-row justify-evenly items-center space-x-8">
 					<div class="w-32"></div>
-					<button class="btn btn-primary w-32" onClick={handleCLick}>Login</button>
+					<button class="btn btn-primary w-32" onClick={handleCLick}>
+						Login
+					</button>
 				</div>
 			</div>
 		</div>
