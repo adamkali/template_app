@@ -10,6 +10,8 @@ const root = document.getElementById("root");
 
 if (root) {
     render(() => (
+    
+
         <Router root={RootLayout}>
             <Route path="/" component={() => <App />} />
             <Route path="/auth">

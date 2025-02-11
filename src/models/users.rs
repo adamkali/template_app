@@ -298,4 +298,5 @@ impl super::_entities::users::ActiveModel {
         self.reset_sent_at = ActiveValue::Set(None);
         Ok(self.update(db).await?)
     }
+
 }

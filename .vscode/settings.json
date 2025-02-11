@@ -10,5 +10,23 @@
             "database": "template_app_database",
             "username": "template_app_user"
         }
+    ],
+    "dbcode.connections": [
+        {
+            "connectionId": "gchQ-CRXmrEwp1J87Rksh",
+            "name": "template_app",
+            "driver": "postgres",
+            "color": "#7655FF",
+            "connectionType": "host",
+            "host": "75.115.15.63",
+            "port": 54321,
+            "ssl": true,
+            "sslTrustCertificate": true,
+            "username": "postgres",
+            "password": "",
+            "savePassword": "secretStorage",
+            "database": "postgres",
+            "connectionTimeout": 100
+        }
     ]
 }

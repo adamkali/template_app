@@ -13,6 +13,7 @@ function createAuthAPI(): AuthApi {
 async function createLogin(requestParameters: AuthApiLoginRequest) {
     return (await createAuthAPI().login(requestParameters)).data
 }
+
 async function createSignUp(requestParameters: AuthApiRegisterRequest) {
     return (await createAuthAPI().register(requestParameters)).data
 }

@@ -1,12 +1,88 @@
 services:
   web:
-    build:
-      context: .
-      dockerfile: dockerfile 
-    container_name: template_app_web
-    ports:
-      - '5150:5150'
+    image: ghcr.io/adamkali/template_app:stable
+    environment:
+      - SERVICE_FQDN_WEB_5150
+      - _APP_URL=$SERVICE_FQDN_WEB_5150
+      - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
+      - REDIS_USERNAME=$SERVICE_USER_REDIS
+      - MINIO_ACCESS_TOKEN=$MINIO_ACCESS_TOKEN
+      - MINIO_SECRET_TOKEN=$MINIO_SECRET_TOKEN
+      - MINIO_URI=$MINIO_SERVER_URL
+      - POSTGRES_USER=$SERVICE_USER_POSTGRES
+      - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:5150/_health'
+      interval: 5s
+      timeout: 20s
+      retries: 10
+    volumes:
+      - type: bind
+        source: ./config/production.yaml
+        target: /usr/app/config/production.yaml
+        content: ''
+  grafana:
+    image: grafana/grafana-oss
+    environment:
+      - SERVICE_FQDN_GRAFANA_3000
+      - 'GF_SERVER_ROOT_URL=${SERVICE_FQDN_GRAFANA}'
+      - 'GF_SERVER_DOMAIN=${SERVICE_FQDN_GRAFANA}'
+      - 'GF_SECURITY_ADMIN_PASSWORD=${SERVICE_PASSWORD_GRAFANA}'
+    volumes:
+      - 'grafana-data:/var/lib/grafana'
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:3000/api/health'
+      interval: 5s
+      timeout: 20s
+      retries: 10
+  minio:
+    image: 'quay.io/minio/minio:latest'
+    command: 'server /data --console-address ":9001"'
+    environment:
+      - MINIO_SERVER_URL=$MINIO_SERVER_URL
+      - MINIO_BROWSER_REDIRECT_URL=$MINIO_BROWSER_REDIRECT_URL
+      - MINIO_ROOT_USER=$SERVICE_USER_MINIO
+      - MINIO_ROOT_PASSWORD=$SERVICE_PASSWORD_MINIO
+    volumes:
+      - 'minio-data:/data'
+    healthcheck:
+      test:
+        - CMD
+        - mc
+        - ready
+        - local
+      interval: 5s
+      timeout: 20s
+      retries: 10
+  postgresql:
+    image: postgres:16-alpine
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=$SERVICE_USER_POSTGRES
+      - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
+      - POSTGRES_DB=$POSTGRES_DB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+  redis:
+    image: redis:alpine
     environment: 
-      - POSTGRES_URI=${POSTGRES_URI}
-      - JWT_SECRET=${JWT_SECRET}
-      - REDIS_URI=${REDIS_URI}
+      - ALLOW_EMPTY_PASSWORD=false
+      - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
+      - REDIS_USERNAME=$SERVICE_USERNAME_REDIS
+    volumes:
+      - redis-data:/data
+    excluede_from_hc: true
+
+

@@ -36,10 +36,10 @@ mailer:
 
 database:
   # Database connection URI
-  uri: 'postgres://postgres:yU3UUUEUL7wTnO19EAUhi6iQ7J1xIQR8G46ieMKQRaZVxEh25bCO4jedMWyowTmM@192.168.1.69:43544/postgres'
+  uri: 'postgres://postgres:yU3UUUEUL7wTnO19EAUhi6iQ7J1xIQR8G46ieMKQRaZVxEh25bCO4jedMWyowTmM@75.115.15.63:43544/postgres'
   enable_logging: true
-  connect_timeout: {{ get_env(name="DB_CONNECT_TIMEOUT", default="1000") }}
-  idle_timeout: 500
+  connect_timeout: {{ get_env(name="DB_CONNECT_TIMEOUT", default="100") }}
+  idle_timeout: 50
   min_connections: 1
   max_connections: 3
   auto_migrate: true
@@ -51,6 +51,15 @@ queue:
   kind: Redis
   uri: {{ get_env(name="REDIS_URL", default="redis://127.0.0.1") }}
   dangerously_flush: false
+
+settings:
+  minio_config:
+    uri: 'https://minio-jwgcck0cs88k8cck0go08koc.kalilarosa.xyz'
+    access_key: 3Jp09imRYd34bUQPWaVF,
+    secret_key: rWGjZksQ0AYlpksHr53ZeSv6AL55EqFtCNViGC0z
+
+
+
 
 # Authentication Configuration
 auth:

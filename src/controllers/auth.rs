@@ -1,19 +1,22 @@
 use axum::debug_handler;
 use loco_rs::prelude::*;
+use minio::s3::args::MakeBucketArgs;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
 use crate::{
+    common::Settings,
     mailers::auth::AuthMailer,
     models::{
-        _entities::users,
+        _entities::{profiles, users},
         users::{LoginParams, RegisterParams},
     },
+    storages::minio::MinIO,
     views::{
-        auth::{CurrentResponse, LoginResponse}, DetailedResponse,
+        auth::{CurrentResponse, LoginResponse},
+        DetailedResponse,
     },
 };
-
 
 #[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct VerifyParams {
@@ -37,7 +40,8 @@ pub struct ResetParams {
     post,
     path="/api/auth/register",
     responses(
-        (status=200, description = "Registered successfully", body=DetailedResponse<String>)
+        (status=200, description = "Registered successfully", body=DetailedResponse<String>),
+        (status=500, description = "Internal server error", body=DetailedResponse<String>)
     ),
     request_body=RegisterParams,
 )]
@@ -57,7 +61,7 @@ async fn register(
                 "could not register user",
             );
             return format::json(());
-            }
+        }
     };
 
     let user = user
@@ -66,9 +70,28 @@ async fn register(
         .await?;
 
     AuthMailer::send_welcome(&ctx, &user).await?;
-    
-    let mut response =DetailedResponse::new(Some("Registered"));
-    response.next_link("/auth/verify").successful().json()
+    let settings = Settings::from_json(&ctx.config.settings.unwrap())?;
+    let minio = match MinIO::new(settings.minio_config) {
+        Ok(minio_cli) => minio_cli,
+        Err(err) => return DetailedResponse::<String>::fail(500, None, err).json(),
+    };
+    match minio
+        .client
+        .make_bucket(&MakeBucketArgs::new(&user.pid.to_string()).map_err(Error::wrap)?)
+        .await
+        .map_err(Error::wrap)
+    {
+        Ok(_) => {
+            tracing::info!("MinIO bucket created {}", &user.pid.to_string());
+            if let Err(err) = profiles::Model::create(&ctx.db, &user.pid).await {
+                return DetailedResponse::<String>::fail(500, None, Error::wrap(err)).json();
+            }
+
+            let mut response = DetailedResponse::new(Some("Registered"));
+            response.next_link("/auth/verify").successful().json()
+        }
+        Err(err) => DetailedResponse::<String>::fail(500, None, err).json(),
+    }
 }
 
 /// Verify register user. if the user not verified his email, he can't login to
@@ -202,11 +225,15 @@ pub async fn login(
 
     let jwt_secret = ctx.config.get_jwt_config()?;
 
-    let token = user
-        .generate_jwt(&jwt_secret.secret, &jwt_secret.expiration)
-        .or_else(|_| unauthorized("unauthorized!"))?;
-
-    DetailedResponse::ok(LoginResponse::new(&user, &token), Some("/".to_string())).json()
+    let token = user.generate_jwt(&jwt_secret.secret, &jwt_secret.expiration);
+    match token {
+        Ok(token_result) => DetailedResponse::ok(
+            LoginResponse::new(&user, &token_result),
+            Some("/".to_string()),
+        )
+        .json(),
+        Err(err) => DetailedResponse::<LoginResponse>::fail(401, None, Error::wrap(err)).json(),
+    }
 }
 
 #[utoipa::path(
@@ -217,11 +244,11 @@ pub async fn login(
         (status=401, description = "An email was sent", body=DetailedResponse<CurrentResponse>)
     ),
     security(
-        ("api_jwt_token" = [])
+        ("authorization" = [])
     )
 )]
 #[debug_handler]
-pub async fn current(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Response> {
+pub async fn current( auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Response> {
     let user = users::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
     DetailedResponse::ok(CurrentResponse::new(&user), None).json()
 }
