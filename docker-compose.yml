@@ -3,15 +3,16 @@ services:
     image: ghcr.io/adamkali/template_app:stable
     environment:
       - SERVICE_FQDN_WEB_5150
-      - POSTGRES_URI=$SERVICE_URL_POSTGRES
+      - POSTGRES_URI=$SERVICE_FQDN_POSTGRES
+      - REDIS_URI=$SERVICE_URL_REDIS
       - _APP_URL=$SERVICE_FQDN_WEB_5150
       - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
       - REDIS_USERNAME=$SERVICE_USER_REDIS
-      - REDIS_URI=$SERVICE_URL_REDIS
       - MINIO_ACCESS_TOKEN=${MINIO_ACCESS_TOKEN}
       - MINIO_SECRET_TOKEN=${MINIO_SECRET_TOKEN}
       - MINIO_URI=$MINIO_SERVER_URL
       - POSTGRES_USER=$SERVICE_USER_POSTGRES
+      - POSTGRES_DB=$SERVICE_REALBASE64_POSTGRES
       - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
       - JWT_PHRASE=$SERVICE_REALBASE64_WEB
     healthcheck:
@@ -23,6 +24,8 @@ services:
       interval: 5s
       timeout: 20s
       retries: 10
+    depends_on:
+        postgresql
     volumes:
       - type: bind
         source: ./config/production.yaml
@@ -62,7 +65,7 @@ services:
 
           database:
             # Database connection URI
-            uri: '$POSTGRES_URI'
+            uri: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${SERVICE_FQDN_POSTGRES}/${POSTGRES_DB}
             enable_logging: true
             connect_timeout: 500
             idle_timeout: 500
@@ -75,20 +78,20 @@ services:
           # Queue Configuration
           queue:
             kind: Redis
-            uri: '$REDIS_URI'
+            uri: '${REDIS_URI}'
             dangerously_flush: false
 
           # Authentication Configuration
           auth:
             jwt:
-              secret: '$JWT_PHRASE'
+              secret: '${JWT_PHRASE}'
               expiration: 604800 # 7 days
 
           settings:
             minio_config:
-              uri: '$MINIO_URI'
-              access_key: '$MINIO_ACCESS_TOKEN',
-              secret_key: '$MINIO_SECRET_TOKEN'
+              uri: '${MINIO_URI}'
+              access_key: '${MINIO_ACCESS_TOKEN}',
+              secret_key: '${MINIO_SECRET_TOKEN}'
 
           '
   grafana:
@@ -133,11 +136,9 @@ services:
     volumes:
       - postgresql-data:/var/lib/postgresql/data
     environment:
-      - SERVICE_FQDN_POSTGRES_5432
-      - POSTGRES_URI=SERVICE_URL_POSTGRES
       - POSTGRES_USER=$SERVICE_USER_POSTGRES
       - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
-      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_DB=$SERVICE_REALBASE64_POSTGRES
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -146,8 +147,6 @@ services:
   redis:
     image: redis:alpine
     environment: 
-      - SERVICE_FQDN_REDIS_6379
-      - REDIS_URI=SERVICE_URL_REDIS
       - ALLOW_EMPTY_PASSWORD=false
       - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
       - REDIS_USERNAME=$SERVICE_USERNAME_REDIS
