@@ -3,14 +3,17 @@ services:
     image: ghcr.io/adamkali/template_app:stable
     environment:
       - SERVICE_FQDN_WEB_5150
+      - POSTGRES_URI=$SERVICE_URL_POSTGRES
       - _APP_URL=$SERVICE_FQDN_WEB_5150
       - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
       - REDIS_USERNAME=$SERVICE_USER_REDIS
-      - MINIO_ACCESS_TOKEN=$MINIO_ACCESS_TOKEN
-      - MINIO_SECRET_TOKEN=$MINIO_SECRET_TOKEN
+      - REDIS_URI=$SERVICE_URL_REDIS
+      - MINIO_ACCESS_TOKEN=${MINIO_ACCESS_TOKEN}
+      - MINIO_SECRET_TOKEN=${MINIO_SECRET_TOKEN}
       - MINIO_URI=$MINIO_SERVER_URL
       - POSTGRES_USER=$SERVICE_USER_POSTGRES
       - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
+      - JWT_PHRASE=$SERVICE_REALBASE64_WEB
     healthcheck:
       test:
         - CMD
@@ -24,7 +27,70 @@ services:
       - type: bind
         source: ./config/production.yaml
         target: /usr/app/config/production.yaml
-        content: ''
+        content: |
+          logger:
+            enable: true
+            level: trace 
+            format: compact
+
+          server:
+            binding: 0.0.0.0
+            port: 5150
+            host: http://localhost
+            middlewares:
+              static:
+                enable: true
+                must_exist: true
+                precompressed: false
+                folder:
+                  uri: "/"
+                  path: "frontend/dist"
+                fallback: "frontend/dist/index.html"
+
+          workers:
+            mode: BackgroundAsync
+
+          mailer:
+            smtp:
+              enable: false
+              host: smtp-mail.outlook.com
+              port: 587
+              secure: true
+              auth: 
+                user: adamkali@outlook.com 
+                password: {{ get_env(name="MAILER_PASSWORD", default="admin") }}
+
+          database:
+            # Database connection URI
+            uri: '$POSTGRES_URI'
+            enable_logging: true
+            connect_timeout: 500
+            idle_timeout: 500
+            min_connections: 1
+            max_connections: 3
+            auto_migrate: true
+            dangerously_truncate: false
+            dangerously_recreate: false
+
+          # Queue Configuration
+          queue:
+            kind: Redis
+            uri: '$REDIS_URI'
+            dangerously_flush: false
+
+          # Authentication Configuration
+          auth:
+            jwt:
+              secret: '$JWT_PHRASE'
+              expiration: 604800 # 7 days
+
+          settings:
+            minio_config:
+              uri: '$MINIO_URI'
+              access_key: '$MINIO_ACCESS_TOKEN',
+              secret_key: '$MINIO_SECRET_TOKEN'
+
+          '
   grafana:
     image: grafana/grafana-oss
     environment:
@@ -67,6 +133,8 @@ services:
     volumes:
       - postgresql-data:/var/lib/postgresql/data
     environment:
+      - SERVICE_FQDN_POSTGRES_5432
+      - POSTGRES_URI=SERVICE_URL_POSTGRES
       - POSTGRES_USER=$SERVICE_USER_POSTGRES
       - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
       - POSTGRES_DB=$POSTGRES_DB
@@ -78,6 +146,8 @@ services:
   redis:
     image: redis:alpine
     environment: 
+      - SERVICE_FQDN_REDIS_6379
+      - REDIS_URI=SERVICE_URL_REDIS
       - ALLOW_EMPTY_PASSWORD=false
       - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
       - REDIS_USERNAME=$SERVICE_USERNAME_REDIS

@@ -36,7 +36,7 @@ mailer:
 
 database:
   # Database connection URI
-  uri: 'postgres://postgres:yU3UUUEUL7wTnO19EAUhi6iQ7J1xIQR8G46ieMKQRaZVxEh25bCO4jedMWyowTmM@75.115.15.63:43544/postgres'
+  uri: postgres://postgres:yU3UUUEUL7wTnO19EAUhi6iQ7J1xIQR8G46ieMKQRaZVxEh25bCO4jedMWyowTmM@75.115.15.63:54321/postgres
   enable_logging: true
   connect_timeout: {{ get_env(name="DB_CONNECT_TIMEOUT", default="100") }}
   idle_timeout: 50

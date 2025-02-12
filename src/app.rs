@@ -1,4 +1,4 @@
-use std::{path::Path, sync::Arc};
+use std::path::Path;
 
 use async_trait::async_trait;
 use loco_rs::{
@@ -8,7 +8,6 @@ use loco_rs::{
     controller::AppRoutes,
     db::{self, truncate_table},
     environment::Environment,
-    storage::Storage,
     task::Tasks,
     Result,
 };
@@ -16,11 +15,8 @@ use migration::Migrator;
 use sea_orm::DatabaseConnection;
 
 use crate::{
-    common::{self, Settings},
     controllers, initializers,
     models::_entities::users,
-    storages,
-    storages::minio::MinIO,
     tasks,
     workers::downloader::DownloadWorker,
 };
