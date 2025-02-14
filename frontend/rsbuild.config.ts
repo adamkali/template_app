@@ -1,7 +1,9 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginBabel } from "@rsbuild/plugin-babel";
 import { pluginSolid } from "@rsbuild/plugin-solid";
-const isDev = process.env.NODE_ENV === 'development';
+import { pluginNodePolyfill } from '@rsbuild/plugin-node-polyfill';
+
+//const isDev = process.env.NODE_ENV === 'development';
 
 export default defineConfig({
     tools: {
@@ -12,6 +14,7 @@ export default defineConfig({
             include: /\.(?:jsx|tsx)$/,
         }),
         pluginSolid(),
+        pluginNodePolyfill()
     ],
     resolve: {
         alias: {
