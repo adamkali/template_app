@@ -4,7 +4,7 @@ services:
     image: ghcr.io/adamkali/template_app:stable
     environment:
       - SERVICE_FQDN_WEB_5150
-      - POSTGRES_URI=$SERVICE_FQDN_POSTGRES
+      - POSTGRES_URI=$SERVICE_UID_POSTGRES
       - REDIS_URI=$SERVICE_URL_REDIS
       - _APP_URL=$SERVICE_FQDN_WEB_5150
       - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
