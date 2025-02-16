@@ -15,7 +15,7 @@ services:
       - POSTGRES_DB=$SERVICE_REALBASE64_POSTGRES
       - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
       - JWT_PHRASE=$SERVICE_REALBASE64_WEB
-      - POSTGRES_URI=$SERVICE_URL_POSTGRES
+      - POSTGRES_URI=$SERVICE_URL_POSTGRES}
     healthcheck:
       test:
         - CMD
@@ -61,11 +61,11 @@ services:
               secure: true
               auth: 
                 user: adamkali@outlook.com 
-                password: '{{ get_env(name="MAILER_PASSWORD", default="admin") }}'
+                password: {{ get_env(name="MAILER_PASSWORD", default="admin") }}
 
           database:
             # Database connection URI
-            uri: 'postgres://{{ get_env(POSTGRES_USER) }}:{{ get_env(POSTGRES_PASSWORD) }}@{{ get_env(SERVICE_FQDN_POSTGRES) }}/{{ get_env(POSTGRES_DB) }}'
+            uri: 'postgres://{{ get_env(name="POSTGRES_USER") }}:{{ get_env(name="POSTGRES_PASSWORD") }}@{{ get_env(name="POSTGRES_URI") }}/{{ get_env(name="POSTGRES_DB") }}'
             enable_logging: true
             connect_timeout: 500
             idle_timeout: 500
@@ -76,24 +76,22 @@ services:
             dangerously_recreate: false
 
           # Queue Configuration
-
           queue:
             kind: Redis
-            uri: '{{ get_env(REDIS_URI) }}'
+            uri: '{{ get_env(name="REDIS_URI") }}'
             dangerously_flush: false
 
           # Authentication Configuration
-
           auth:
             jwt:
-              secret: '{{ get_env(JWT_PHRASE) }}'
+              secret: '{{ get_env(name="JWT_PHRASE") }}'
               expiration: 604800 # 7 days
 
           settings:
             minio_config:
-              uri: '{{ get_env(MINIO_URI) }}'
-              access_key: '{{ get_env(MINIO_ACCESS_TOKEN) }}',
-              secret_key: '{{ get_env(MINIO_SECRET_TOKEN) }}'
+              uri: '{{ get_env(name="MINIO_URI") }}'
+              access_key: '{{ get_env(name="MINIO_ACCESS_TOKEN") }}',
+              secret_key: '{{ get_env(name="MINIO_SECRET_TOKEN") }}'
   grafana:
     image: grafana/grafana-oss
     environment:
