@@ -30,7 +30,7 @@ services:
       - type: bind
         source: ./config/production.yaml
         target: /usr/app/config/production.yaml
-        content: >
+        content: |
           logger:
             enable: true
             level: trace 
