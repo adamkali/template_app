@@ -32,7 +32,7 @@ mailer:
 
 database:
   # Database connection URI
-  uri: 'postgres://{{ get_env(name="POSTGRES_USER") }}:{{ get_env(name="POSTGRES_PASSWORD") }}@{{ get_env(name="POSTGRES_URI") }}/{{ get_env(name="POSTGRES_DB") }}'
+  uri: {{ get_env(name="POSTGRES_URL") }}
   enable_logging: true
   connect_timeout: 500
   idle_timeout: 500

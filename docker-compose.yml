@@ -84,5 +84,5 @@ services:
           settings:
             minio_config:
               uri: '{{ get_env(name="MINIO_SERVER_URL") }}'
-              access_key: '{{ get_env(name="MINIO_ACCESS_TOKEN") }}',
+              access_key: '{{ get_env(name="MINIO_ACCESS_TOKEN") }}'
               secret_key: '{{ get_env(name="MINIO_SECRET_TOKEN") }}'
