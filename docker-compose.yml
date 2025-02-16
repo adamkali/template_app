@@ -72,7 +72,7 @@ services:
           # Queue Configuration
           queue:
             kind: Redis
-            uri: '{{ get_env(name="REDIS_URI") }}'
+            uri: '{{ get_env(name="REDIS_URL") }}'
             dangerously_flush: false
 
           # Authentication Configuration
