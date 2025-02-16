@@ -24,7 +24,6 @@ push:
 push-stable:
 	docker tag $(CONTAINER_NAME):stable ghcr.io/$(USER_NAME)/$(CONTAINER_NAME):stable
 	docker push ghcr.io/$(USER_NAME)/$(CONTAINER_NAME):stable
-	
 stable: docker-build-tag-stable push-stable
 latest: docker-build-tag push
 stable-nc: docker-build-tag-no-cache-stable push-stable

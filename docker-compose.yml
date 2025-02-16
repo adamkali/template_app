@@ -65,7 +65,7 @@ services:
 
           database:
             # Database connection URI
-            uri: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${SERVICE_FQDN_POSTGRES}/${POSTGRES_DB}
+            uri: postgres://{{ get_env(POSTGRES_USER) }}:{{ get_env(POSTGRES_PASSWORD) }}@{{ get_env(SERVICE_FQDN_POSTGRES) }}/{{ get_env(POSTGRES_DB) }}
             enable_logging: true
             connect_timeout: 500
             idle_timeout: 500
@@ -78,22 +78,21 @@ services:
           # Queue Configuration
           queue:
             kind: Redis
-            uri: '${REDIS_URI}'
+            uri: '{{ get_env(REDIS_URI) }}'
             dangerously_flush: false
 
           # Authentication Configuration
           auth:
             jwt:
-              secret: '${JWT_PHRASE}'
+              secret: '{{ get_env(JWT_PHRASE) }}'
               expiration: 604800 # 7 days
 
           settings:
             minio_config:
-              uri: '${MINIO_URI}'
-              access_key: '${MINIO_ACCESS_TOKEN}',
-              secret_key: '${MINIO_SECRET_TOKEN}'
+              uri: '{{ get_env(MINIO_URI) }}'
+              access_key: '{{ get_env(MINIO_ACCESS_TOKEN) }}',
+              secret_key: '{{ get_env(MINIO_SECRET_TOKEN) }}'
 
-          '
   grafana:
     image: grafana/grafana-oss
     environment:

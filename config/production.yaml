@@ -32,7 +32,7 @@ mailer:
 
 database:
   # Database connection URI
-  uri: 'postgres://fo0k0gg0c04sg4s0gows8kks:5432/postgres?user=postgres&password=yU3UUUEUL7wTnO19EAUhi6iQ7J1xIQR8G46ieMKQRaZVxEh25bCO4jedMWyowTmM'
+  uri: postgres://{{ get_env(POSTGRES_USER) }}:{{ get_env(POSTGRES_PASSWORD) }}@{{ get_env(SERVICE_FQDN_POSTGRES) }}/{{ get_env(POSTGRES_DB) }}
   enable_logging: true
   connect_timeout: 500
   idle_timeout: 500
@@ -45,11 +45,17 @@ database:
 # Queue Configuration
 queue:
   kind: Redis
-  uri: 'http://E0PE1FO3apRDB4MolgDN0a9an1X9hArD0g7bh3iyR4bbtE2maICZpMrJwrksL9TH@u4gckkso8cg8kwgg0w4kwoko:6379'
+  uri: '{{ get_env(REDIS_URI) }}'
   dangerously_flush: false
 
 # Authentication Configuration
 auth:
   jwt:
-    secret: x39kjNsffFfNj20AFbzF
+    secret: '{{ get_env(JWT_PHRASE) }}'
     expiration: 604800 # 7 days
+
+settings:
+  minio_config:
+    uri: '{{ get_env(MINIO_URI) }}'
+    access_key: '{{ get_env(MINIO_ACCESS_TOKEN) }}',
+    secret_key: '{{ get_env(MINIO_SECRET_TOKEN) }}'
