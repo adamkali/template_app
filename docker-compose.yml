@@ -61,11 +61,11 @@ services:
               secure: true
               auth: 
                 user: adamkali@outlook.com 
-                password: {{ get_env(name="MAILER_PASSWORD", default="admin") }}
+                password: '{{ get_env(name="MAILER_PASSWORD", default="admin") }}'
 
           database:
             # Database connection URI
-            uri: postgres://{{ get_env(POSTGRES_USER) }}:{{ get_env(POSTGRES_PASSWORD) }}@{{ get_env(SERVICE_FQDN_POSTGRES) }}/{{ get_env(POSTGRES_DB) }}
+            uri: 'postgres://{{ get_env(POSTGRES_USER) }}:{{ get_env(POSTGRES_PASSWORD) }}@{{ get_env(SERVICE_FQDN_POSTGRES) }}/{{ get_env(POSTGRES_DB) }}'
             enable_logging: true
             connect_timeout: 500
             idle_timeout: 500
