@@ -3,17 +3,24 @@ use serde::{Deserialize, Serialize};
 use loco_rs::Result;
 use loco_rs::Error;
 
-#[derive(Serialize, Deserialize, Default, Debug)]
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Settings {
+    #[serde(rename = "minio_config")]
     pub minio_config: MinioConfig,
 }
 
-#[derive(Serialize, Deserialize, Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MinioConfig {
     pub uri: String,
+    #[serde(rename = "access_key")]
     pub access_key: String,
-    pub secret_key: String
+    #[serde(rename = "secret_key")]
+    pub secret_key: String,
 }
+
 
 impl Provider for MinioConfig {
     fn fetch(&self) -> minio::s3::creds::Credentials {
