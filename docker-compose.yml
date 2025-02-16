@@ -1,3 +1,4 @@
+---
 services:
   web:
     image: ghcr.io/adamkali/template_app:stable
@@ -19,18 +20,17 @@ services:
       test:
         - CMD
         - curl
-        - '-f'
-        - 'http://127.0.0.1:5150/_health'
+        - -f
+        - http://127.0.0.1:5150/_health
       interval: 5s
       timeout: 20s
       retries: 10
-    depends_on:
-        postgresql
+    depends_on: postgresql
     volumes:
       - type: bind
         source: ./config/production.yaml
         target: /usr/app/config/production.yaml
-        content: |
+        content: >
           logger:
             enable: true
             level: trace 
@@ -76,12 +76,14 @@ services:
             dangerously_recreate: false
 
           # Queue Configuration
+
           queue:
             kind: Redis
             uri: '{{ get_env(REDIS_URI) }}'
             dangerously_flush: false
 
           # Authentication Configuration
+
           auth:
             jwt:
               secret: '{{ get_env(JWT_PHRASE) }}'
@@ -92,35 +94,34 @@ services:
               uri: '{{ get_env(MINIO_URI) }}'
               access_key: '{{ get_env(MINIO_ACCESS_TOKEN) }}',
               secret_key: '{{ get_env(MINIO_SECRET_TOKEN) }}'
-
   grafana:
     image: grafana/grafana-oss
     environment:
       - SERVICE_FQDN_GRAFANA_3000
-      - 'GF_SERVER_ROOT_URL=${SERVICE_FQDN_GRAFANA}'
-      - 'GF_SERVER_DOMAIN=${SERVICE_FQDN_GRAFANA}'
-      - 'GF_SECURITY_ADMIN_PASSWORD=${SERVICE_PASSWORD_GRAFANA}'
+      - GF_SERVER_ROOT_URL=${SERVICE_FQDN_GRAFANA}
+      - GF_SERVER_DOMAIN=${SERVICE_FQDN_GRAFANA}
+      - GF_SECURITY_ADMIN_PASSWORD=${SERVICE_PASSWORD_GRAFANA}
     volumes:
-      - 'grafana-data:/var/lib/grafana'
+      - grafana-data:/var/lib/grafana
     healthcheck:
       test:
         - CMD
         - curl
-        - '-f'
-        - 'http://127.0.0.1:3000/api/health'
+        - -f
+        - http://127.0.0.1:3000/api/health
       interval: 5s
       timeout: 20s
       retries: 10
   minio:
-    image: 'quay.io/minio/minio:latest'
-    command: 'server /data --console-address ":9001"'
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
     environment:
       - MINIO_SERVER_URL=$MINIO_SERVER_URL
       - MINIO_BROWSER_REDIRECT_URL=$MINIO_BROWSER_REDIRECT_URL
       - MINIO_ROOT_USER=$SERVICE_USER_MINIO
       - MINIO_ROOT_PASSWORD=$SERVICE_PASSWORD_MINIO
     volumes:
-      - 'minio-data:/data'
+      - minio-data:/data
     healthcheck:
       test:
         - CMD
@@ -139,18 +140,18 @@ services:
       - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
       - POSTGRES_DB=$SERVICE_REALBASE64_POSTGRES
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test:
+        - CMD-SHELL
+        - pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}
       interval: 5s
       timeout: 20s
       retries: 10
   redis:
     image: redis:alpine
-    environment: 
+    environment:
       - ALLOW_EMPTY_PASSWORD=false
       - REDIS_PASSWORD=$SERVICE_PASSWORD_REDIS
       - REDIS_USERNAME=$SERVICE_USERNAME_REDIS
     volumes:
       - redis-data:/data
-    excluede_from_hc: true
-
 
